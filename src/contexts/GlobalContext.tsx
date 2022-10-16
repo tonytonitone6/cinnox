@@ -8,20 +8,19 @@ import {
   useReducer,
   Dispatch
 } from 'react';
-import * as R from 'ramda';
-import {
-  getFilterDataWithCondition,
-  getSliceData
-} from '@utils/getFilterDataWithCondition';
+import { formatTemperatureUnit } from '@utils/formatTemperatureUnit';
 
 export enum ActionsType {
   UPDATE_WEATHER_LIST = 'UPDATE_WEATHER_LIST',
-  SET_SEARCH_WORDS = 'SET_SEARCH_WORDS'
+  SET_SEARCH_WORDS = 'SET_SEARCH_WORDS',
+  SET_LOADING_STATUS = 'SET_LOADING_STATUS'
 }
 
 export type TagType = {
   name: string;
 };
+
+type fieldKeys = 'temp_max' | 'temp_min' | 'humidity';
 
 export type ValueType = {
   date: string;
@@ -29,7 +28,7 @@ export type ValueType = {
 };
 
 type StatusType = {
-  [key: string]: ValueType[];
+  [key in fieldKeys]: ValueType[];
 };
 
 type InitStateType = {
@@ -76,7 +75,7 @@ type ContextType = {
 const initState: InitStateType = {
   searchWords: '',
   isLoading: false,
-  data: {}
+  data: {} as StatusType
 };
 
 export const GlobalProvider: FC<ContextType> = ({ children }) => {
@@ -98,33 +97,27 @@ const useStore = () => {
 
 const updateLoadingStatus = (
   dispatch: Dispatch<IActionType>,
-  actionsType: string,
-  setName: string
-) => {
-  if (actionsType) {
-    dispatch({ type: actionsType, payload: setName });
-  }
-};
+  status: boolean
+) => dispatch({ type: ActionsType.SET_LOADING_STATUS, payload: status });
 
 const updateWeatherListByCity = (
   dispatch: Dispatch<IActionType>,
-  weathers: any[],
-  limit: number
+  weathers: any[]
 ) => {
-  // REMARK free version only supported 3 hours 5days data, and it has limitation(4) with requirement
-  const filteredWeatherList = R.compose(
-    (list) => getSliceData(list, limit),
-    getFilterDataWithCondition
-  )(weathers, '21:00:00');
-
-  const formattedWeatherList = filteredWeatherList.reduce(
+  const formattedWeatherList = weathers.reduce(
     (acc, weather) => {
       const { dt_txt: fullyDate, main: info } = weather;
       const [date] = fullyDate.split(' ');
       const newAcc = {
         ...acc,
-        temp_max: [...acc['temp_max'], { date, value: info.temp_max }],
-        temp_min: [...acc['temp_min'], { date, value: info.temp_min }],
+        temp_max: [
+          ...acc['temp_max'],
+          { date, value: formatTemperatureUnit(info.temp_max) }
+        ],
+        temp_min: [
+          ...acc['temp_min'],
+          { date, value: formatTemperatureUnit(info.temp_min) }
+        ],
         humidity: [...acc['humidity'], { date, value: info.humidity }]
       };
       return newAcc;
