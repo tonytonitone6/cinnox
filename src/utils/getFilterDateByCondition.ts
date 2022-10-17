@@ -1,5 +1,5 @@
-export const getFilterDateWithCondition = (list: any[], condition: string) =>
-  list.filter((data) => {
-    const { dt_txt: date } = data;
-    return date.indexOf(condition) !== -1;
-  });
+export const getFilterDateWithCondition = (
+  list: any[],
+  field: string,
+  condition: string
+) => list.filter((data) => data[field].indexOf(condition) !== -1);

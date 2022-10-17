@@ -55,7 +55,7 @@ const Reports = () => {
           const filteredWeatherList = R.compose(
             (list) => getSliceData(list, LIMIT_RECORDS),
             getFilterDateWithCondition
-          )(weatherList, '21:00:00');
+          )(weatherList, 'dt_txt', '21:00:00');
 
           updateWeatherListByCity(dispatch, filteredWeatherList);
           setIsLoading(false);
