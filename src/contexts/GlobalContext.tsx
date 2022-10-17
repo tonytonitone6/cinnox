@@ -27,7 +27,7 @@ export type ValueType = {
   value: number;
 };
 
-type StatusType = {
+export type StatusType = {
   [key in fieldKeys]: ValueType[];
 };
 
