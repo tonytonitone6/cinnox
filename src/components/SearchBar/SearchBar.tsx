@@ -5,6 +5,7 @@ import useEventCallback from '@hooks/useEventCallback';
 import { SearchBarWrap, Input, SearchBtn } from './SearchBar.style';
 
 const SearchBar: FC = (): JSX.Element => {
+  // MARKET If component has another special effects, you can change to useState
   const textRef = useRef<string>('');
   const { dispatch } = useStore();
 

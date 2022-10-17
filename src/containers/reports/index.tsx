@@ -58,7 +58,7 @@ const Reports = () => {
   }, [dispatch, searchWords]);
 
   return (
-    <>
+    <div data-testid="reports">
       <ChartSection>
         {isLoading ? <LoadingSkeleton /> : <BarChart data={data.temp_max} />}
       </ChartSection>
@@ -74,7 +74,7 @@ const Reports = () => {
           ))
         )}
       </ChartSection>
-    </>
+    </div>
   );
 };
 
