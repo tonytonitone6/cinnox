@@ -20,7 +20,6 @@ const PieChart: FC<PieChartType> = ({ data }): JSX.Element => {
           strokeDasharray={100}
           strokeDashoffset={100}
           strokeWidth={30}
-          stroke="black"
         />
         <text textAnchor="middle">{date}</text>
         <text textAnchor="middle" y="20px">

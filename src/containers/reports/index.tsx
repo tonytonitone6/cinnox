@@ -20,11 +20,21 @@ export type ChartType = {
   data: ValueType[];
 };
 
-const ChartSection = styled('div')`
-  margin-top: 50px;
+const ChartSection = styled('div')<{ direction?: 'row' | 'column' }>`
+  margin: 50px 0;
   width: 100%;
   height: 500px;
   display: flex;
+  flex-direction: ${({ direction = 'column' }) => direction};
+`;
+
+const SectionTitle = styled('h2')`
+  width: 100%;
+`;
+
+const HumidityBlock = styled('div')`
+  display: flex;
+  height: 100%;
 `;
 
 const Reports = () => {
@@ -60,19 +70,24 @@ const Reports = () => {
   return (
     <div data-testid="reports">
       <ChartSection>
+        <SectionTitle>最高溫</SectionTitle>
         {isLoading ? <LoadingSkeleton /> : <BarChart data={data.temp_max} />}
       </ChartSection>
       <ChartSection>
+        <SectionTitle>最低溫</SectionTitle>
         {isLoading ? <LoadingSkeleton /> : <BarChart data={data.temp_min} />}
       </ChartSection>
-      <ChartSection>
-        {isLoading ? (
-          <LoadingSkeleton />
-        ) : (
-          data.humidity.map((humidityData) => (
-            <PieChart key={humidityData.date} data={humidityData} />
-          ))
-        )}
+      <ChartSection direction="column">
+        <SectionTitle>濕度</SectionTitle>
+        <HumidityBlock>
+          {isLoading ? (
+            <LoadingSkeleton />
+          ) : (
+            data.humidity.map((humidityData) => (
+              <PieChart key={humidityData.date} data={humidityData} />
+            ))
+          )}
+        </HumidityBlock>
       </ChartSection>
     </div>
   );
